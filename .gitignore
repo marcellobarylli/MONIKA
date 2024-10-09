@@ -1,6 +1,0 @@
-results/net_results/*
-results/diff_results/*
-
-!results/diff_results/.gitkeep
-!results/net_results/.gitkeep
-!results/.gitkeep
