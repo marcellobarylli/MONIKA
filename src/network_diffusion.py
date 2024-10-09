@@ -772,6 +772,7 @@ if "SLURM_JOB_ID" not in os.environ:
         summed_betweenness = nx.betweenness_centrality(weighted_G_cms_ALL, weight='weight')
         summed_betweenness_aggro[node] = summed_betweenness[node_p] + summed_betweenness[node_t]
         summed_degree_aggro = degree_p_aggro + degree_t_aggro
+        summed_degrees_aggro[node] = summed_degree_aggro / 4
 
     # %%
     # Make dataframe with node, max_gdd, and summed_degree
