@@ -1,7 +1,7 @@
 # MONIKA
 ## Multi-Omic Network Inference &amp; Knockout Analysis
 
-This tool performs multiplex network inference in a biological setting.
+Performs multiplex network inference in a biological setting. Each network layer is inferred using a weighted Gaussian Graphical Model with prior incorporation from the [STRING Database](https://string-db.org/).
 Target nodes and biological pathways are identified via significance testing of knockouts and diffusion analysis.
 
 The tool has been tested on colorectal cancer datasets.
