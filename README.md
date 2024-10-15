@@ -43,6 +43,8 @@ Run the scripts in the following order, with default parameter settings, to infe
 
 Results in results/diff_results: 
 - NODE_KNOCKOUTS_RESULTS_symmetricTrue_low_dens.csv is a spreadsheet containing results on the effect of knockouts on the network, as well as investigating potential increases in similarity between cms123 and cmsALL
+- Diffusion GIF for visualisation
+- Plots of GDD for critical genes
 
 ![](diffusion_animation.gif|100)
 <img src="diffusion_animation.gif" width="600" height="800" />
