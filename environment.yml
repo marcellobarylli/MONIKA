@@ -4,33 +4,23 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - _libgcc_mutex=0.1=main
-  - _openmp_mutex=5.1=1_gnu
-  - ca-certificates=2023.08.22=h06a4308_0
-  - ld_impl_linux-64=2.38=h1181459_1
-  - libffi=3.4.4=h6a678d5_0
-  - libgcc-ng=11.2.0=h1234567_1
-  - libgfortran-ng=7.5.0=ha8ba4b0_17
-  - libgfortran4=7.5.0=ha8ba4b0_17
-  - libgomp=11.2.0=h1234567_1
-  - libprotobuf=3.20.3=he621ea3_0
-  - libstdcxx-ng=11.2.0=h1234567_1
-  - mpi=1.0=mpich
-  - mpi4py=3.1.4=py39hfc96bbd_0
-  - mpich=3.3.2=hc856adb_0
-  - ncurses=6.4=h6a678d5_0
-  - openssl=3.0.12=h7f8727e_0
-  - pip=23.3=py39h06a4308_0
-  - protobuf=3.20.3=py39h6a678d5_0
-  - python=3.9.18=h955ad1f_0
-  - readline=8.2=h5eee18b_0
-  - setuptools=68.0.0=py39h06a4308_0
-  - sqlite=3.41.2=h5eee18b_0
-  - tk=8.6.12=h1ccaba5_0
-  - wheel=0.41.2=py39h06a4308_0
-  - xlrd=2.0.1=pyhd3eb1b0_1
-  - xz=5.4.2=h5eee18b_0
-  - zlib=1.2.13=h5eee18b_0
+  - ca-certificates=2023.08.22
+  - libffi=3.4.4
+  - mpi4py=3.1.4
+  - mpich=3.3.2
+  - ncurses=6.4
+  - openssl=3.0.12
+  - pip=23.3
+  - protobuf=3.20.3
+  - python=3.9.18
+  - readline=8.2
+  - setuptools=68.0.0
+  - sqlite=3.41.2
+  - tk=8.6.12
+  - wheel=0.41.2
+  - xlrd=2.0.1
+  - xz=5.4.2
+  - zlib=1.2.13
   - pip:
       - alembic==1.12.1
       - appdirs==1.4.4
