@@ -1,7 +1,7 @@
 # MONIKA
 ## Multi-Omic Network Inference &amp; Knockout Analysis
 
-Performs multiplex network inference in a biological setting. Each network layer is inferred using a weighted Gaussian Graphical Model with prior incorporation from the [STRING Database](https://string-db.org/).
+Performs multiplex network inference in a biological setting. Each network layer is inferred using a weighted graphical LASSO with prior incorporation from the [STRING Database](https://string-db.org/).
 Target nodes and biological pathways are identified via significance testing of knockouts and diffusion analysis.
 
 The tool has been tested on colorectal cancer datasets.
@@ -9,9 +9,14 @@ The tool has been tested on colorectal cancer datasets.
 ![Alt text](MONIKA_arrow.png)
 
 ## Installation
-To make installation easy, it is recommended to use a conda environment. In the directory, edit the environment.yml file, change prefix to where you want to install the environment (prefix: path/to/anaconda3/envs/monika)
+To make installation easy, it is recommended to use a conda environment (conda v24.9.1). In the directory, edit the environment.yml file, change prefix to where you want to install the environment (prefix: path/to/anaconda3/envs/monika)
 
-Also make sure to have [R](https://www.r-project.org/) installed (Version >= 4.0)
+Install [R](https://www.r-project.org/) (Version >= 4.0)
+
+(If on Windows):
+Install [Microsoft Visual Studio Tools](https://visualstudio.microsoft.com/downloads/)
+Add R to your [System Variables](https://www.hanss.info/sebastian/post/rtools-path/) (only R is needed, not Rtools)
+
 
 Then, simply run:
 

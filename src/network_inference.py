@@ -462,26 +462,47 @@ if __name__ == "__main__":
             transcriptomics_123_net = transcriptomics_123_net.values
 
 
-            custom_print(f'--------------------------------------\nCOMPARING ALL NETWORKS TO EACH OTHER\n--------------------------------------\n')
-            custom_print(f'Similarity of proteomics_ALL_net to transcriptomics_ALL_net: {evaluate_reconstruction(proteomics_ALL_net, transcriptomics_ALL_net)}')
-            custom_print(f'Similarity of proteomics_ALL_net to proteomics_123_net: {evaluate_reconstruction(proteomics_ALL_net, proteomics_123_net)}')
-            custom_print(f'Similarity of proteomics_ALL_net to transcriptomics_123_net: {evaluate_reconstruction(proteomics_ALL_net, transcriptomics_123_net)}')
-            custom_print(f'Similarity of transcriptomics_ALL_net to proteomics_123_net: {evaluate_reconstruction(transcriptomics_ALL_net, proteomics_123_net)}')
-            custom_print(f'Similarity of transcriptomics_ALL_net to transcriptomics_123_net: {evaluate_reconstruction(transcriptomics_ALL_net, transcriptomics_123_net)}')
-            custom_print(f'Similarity of proteomics_123_net to transcriptomics_123_net: {evaluate_reconstruction(proteomics_123_net, transcriptomics_123_net)}')
+            def print_comparison(net1_name, net2_name, similarity_dict):
+                print(f"\nComparing {net1_name} to {net2_name}:")
+                for key, value in similarity_dict.items():
+                    print(f"  {key}: {value}")
 
+            custom_print('--------------------------------------')
+            custom_print('COMPARING ALL INFERRED NETWORKS TO EACH OTHER')
+            custom_print('--------------------------------------')
+
+            comparisons = [
+                ('proteomics_ALL_net', 'transcriptomics_ALL_net'),
+                ('proteomics_ALL_net', 'proteomics_123_net'),
+                ('proteomics_ALL_net', 'transcriptomics_123_net'),
+                ('transcriptomics_ALL_net', 'proteomics_123_net'),
+                ('transcriptomics_ALL_net', 'transcriptomics_123_net'),
+                ('proteomics_123_net', 'transcriptomics_123_net')
+            ]
+
+            prior_comparisons = [
+                ('proteomics_ALL_net', 'prior'),
+                ('transcriptomics_ALL_net', 'prior'),
+                ('proteomics_123_net', 'prior'),
+                ('transcriptomics_123_net', 'prior')
+]
+
+            for net1, net2 in comparisons:
+                similarity = evaluate_reconstruction(globals()[net1], globals()[net2])
+                print_comparison(net1, net2, similarity)
+
+            custom_print('\n--------------------------------------')
+            custom_print('COMPARING INFERRED NETWORKS TO PRIOR')
+            custom_print('--------------------------------------')
 
             # Read pkl prior file
             with open('data/prior_data/RPPA_prior_adj90perc.pkl', 'rb') as f:
                 prior = pickle.load(f)
 
-            custom_print('\n --------------------------------')
-            # get similarity of prior to each network
-            custom_print(f'Similarity of proteomics_ALL_net to prior: {evaluate_reconstruction(proteomics_ALL_net, prior.values)}')
-            custom_print(f'Similarity of transcriptomics_ALL_net to prior: {evaluate_reconstruction(transcriptomics_ALL_net, prior.values)}')
-            custom_print(f'Similarity of proteomics_123_net to prior: {evaluate_reconstruction(proteomics_123_net, prior.values)}')
-            custom_print(f'Similarity of transcriptomics_123_net to prior: {evaluate_reconstruction(transcriptomics_123_net, prior.values)}')
-
+            # Compare networks to prior
+            for net, _ in prior_comparisons:
+                similarity = evaluate_reconstruction(globals()[net], prior.values)
+                print_comparison(net, 'prior', similarity)
 
 
 
