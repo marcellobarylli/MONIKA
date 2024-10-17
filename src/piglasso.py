@@ -25,6 +25,10 @@ from scipy.special import comb, erf
 import scipy.stats as stats
 from scipy.linalg import block_diag, eigh, inv
 from sklearn.covariance import empirical_covariance
+import os
+import rpy2.situation
+os.environ["R_HOME"] = rpy2.situation.get_r_home()
+
 import rpy2.robjects as ro
 from rpy2.robjects import numpy2ri
 from rpy2.robjects.packages import importr

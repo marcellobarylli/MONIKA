@@ -1,26 +1,22 @@
 name: monika
 channels:
-  - anaconda
-  - defaults
   - conda-forge
+  - defaults
+  - anaconda
 dependencies:
-  - ca-certificates=2023.08.22
-  - libffi=3.4.4
-  - mpi4py=3.1.4
-  - mpich=3.3.2
-  - ncurses=6.4
-  - openssl=3.0.12
-  - pip=23.3
-  - protobuf=3.20.3
   - python=3.9.18
-  - readline=8.2
-  - setuptools=68.0.0
+  - pip=23.3
+  - ca-certificates=2023.08.22
+  - openssl=3.0.12
   - sqlite=3.41.2
   - tk=8.6.12
   - wheel=0.41.2
   - xlrd=2.0.1
   - xz=5.4.2
   - zlib=1.2.13
+  - setuptools=68.0.0
+  - libffi=3.4.4
+  - protobuf=3.20.3
   - pip:
       - alembic==1.12.1
       - appdirs==1.4.4
@@ -84,7 +80,6 @@ dependencies:
       - pathspec==0.11.2
       - patsy==0.5.3
       - pexpect==4.8.0
-      - pickle5==0.0.11
       - pickleshare==0.7.5
       - pillow==9.5.0
       - platformdirs==3.5.0

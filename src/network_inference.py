@@ -31,7 +31,7 @@ def parse_arguments():
     parser.add_argument("--post_process", action="store_true", help="Run post-processing on synthetic run")
     parser.add_argument("--plot_synth", action="store_true", help="Generate plots for analysing the synthetic runs.")
     parser.add_argument('--synth_density', type=float, default=0.03, help='Density of the synthetic network')
-    # omics args
+    # omics argsþ
     parser.add_argument("--omics", action="store_false", help="Set program type to omics ")
     parser.add_argument('--p', type=int, default=154, help='Number of variables (nodes)')
     parser.add_argument('--n', type=int, default=1337, help='Number of samples')
