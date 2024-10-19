@@ -95,7 +95,6 @@ dependencies:
       - pycparser==2.21
       - pygments==2.15.1
       - pygsp==0.5.1
-      - pymnet
       - pyparsing==3.0.9
       - pyrsistent==0.19.3
       - pytest==7.4.3

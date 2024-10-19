@@ -19,6 +19,8 @@ conda env create -f environment.yml
 
 conda activate monika
 
+pip install pymnet
+
 pip install rpy2
 
 ## Data
