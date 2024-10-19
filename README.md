@@ -13,20 +13,13 @@ To make installation easy, it is recommended to use a conda environment (conda v
 
 Install [R](https://www.r-project.org/) (Version >= 4.0)
 
-(If on Windows):
-Install [Microsoft Visual Studio Tools](https://visualstudio.microsoft.com/downloads/)
-Add R to your [System Variables](https://www.hanss.info/sebastian/post/rtools-path/) (only R is needed, not Rtools)
-
-
 Then, simply run:
 
 conda env create -f environment.yml
 
 conda activate monika
 
-pip install pymnet
-
-pip install mpi4py
+pip install rpy2
 
 ## Data
 The multi-omic CRC data used for testing is included in the repository. It is sourced from: https://www.linkedomics.org/data_download/TCGA-COADREAD/. It contains patient-coupled samples for both transcriptomics, proteomics and RPPA (Reverse-Phase Protein Array).
