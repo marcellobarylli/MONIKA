@@ -13,8 +13,6 @@ To make installation easy, it is recommended to use a conda environment (conda v
 
 Once the repo is downloaded, edit the environment.yml file, change prefix to where you want to install the environment (at the bottom of the file, prefix: path/to/anaconda3/envs/monika)
 
-Install [R](https://www.r-project.org/) (Version >= 4.0)
-
 Then, simply run:
 
 conda env create -f environment.yml
@@ -24,6 +22,8 @@ conda activate monika
 pip install pymnet
 
 conda install -c conda-forge rpy2
+
+If this doesn't work, try installing [R](https://www.r-project.org/) (Version >= 4.0) before running "conda install -c conda-forge rpy2"
 
 ## Data
 The multi-omic CRC data used for testing is included in the repository. It is sourced from: https://www.linkedomics.org/data_download/TCGA-COADREAD/. It contains patient-coupled samples for both transcriptomics, proteomics and RPPA (Reverse-Phase Protein Array).
