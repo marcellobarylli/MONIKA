@@ -23,7 +23,8 @@ pip install pymnet
 
 conda install -c conda-forge rpy2
 
-*If this doesn't work, try installing [R](https://www.r-project.org/) (Version >= 4.0) before running "conda install -c conda-forge rpy2"*
+
+*If the last step doesn't work, try installing [R](https://www.r-project.org/) (Version >= 4.0) before running "conda install -c conda-forge rpy2"*
 
 ## Data
 The multi-omic CRC data used for testing is included in the repository. It is sourced from: https://www.linkedomics.org/data_download/TCGA-COADREAD/. It contains patient-coupled samples for both transcriptomics, proteomics and RPPA (Reverse-Phase Protein Array).
