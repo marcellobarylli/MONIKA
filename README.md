@@ -23,7 +23,7 @@ conda activate monika
 
 pip install pymnet
 
-pip install rpy2
+conda install -c conda-forge rpy2
 
 ## Data
 The multi-omic CRC data used for testing is included in the repository. It is sourced from: https://www.linkedomics.org/data_download/TCGA-COADREAD/. It contains patient-coupled samples for both transcriptomics, proteomics and RPPA (Reverse-Phase Protein Array).
