@@ -9,7 +9,9 @@ The tool has been tested on colorectal cancer datasets.
 ![Alt text](MONIKA_arrow.png)
 
 ## Installation
-To make installation easy, it is recommended to use a conda environment (conda v24.9.1). In the directory, edit the environment.yml file, change prefix to where you want to install the environment (prefix: path/to/anaconda3/envs/monika)
+To make installation easy, it is recommended to use a conda environment (conda v24.9.1). 
+
+Once the repo is downloaded, edit the environment.yml file, change prefix to where you want to install the environment (at the bottom of the file, prefix: path/to/anaconda3/envs/monika)
 
 Install [R](https://www.r-project.org/) (Version >= 4.0)
 
