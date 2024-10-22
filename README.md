@@ -76,7 +76,7 @@ create the conda environment with:
 
 conda create --name monika python=3.9 numpy networkx tqdm pyparsing rpy2 -c conda-forge
 
-The scripts to run on HPC are already in the folder src/hpc_scripts. To get the edge counts from piglasso.py, just execute the job script called runpig.sh. The results from this are stored in results/net_results. Just send them back to the same location (MONIKA/results/net_results) on your local machine. Once you have the files, run network_inference.py to continue the pipeline.
+The scripts to run on HPC are already in the folder src/hpc_scripts. To get the edge counts from piglasso.py, just execute the job script called runpig.sh (sbatch runpig.sh). The results from this are stored in results/net_results. Just send them back to the same location (MONIKA/results/net_results) on your local machine. Once you have the files, run network_inference.py to continue the pipeline.
 
 Transferring files back, example: scp -r user@snellius.surf.nl:MONIKA/results/net_results path/to/local/MONIKA/results/
 
