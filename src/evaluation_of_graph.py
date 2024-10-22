@@ -13,12 +13,19 @@ numpy2ri.activate()
 # Define the R function for weighted graphical lasso
 ro.r('''
 weighted_glasso <- function(data, penalty_matrix, nobs) {
+  if (!requireNamespace("glasso", quietly = TRUE)) {
+    message("Package 'glasso' not found. Attempting to install...")
+    install.packages("glasso", repos = "https://cran.rstudio.com/")
+    if (!requireNamespace("glasso", quietly = TRUE)) {
+      stop("Failed to install 'glasso' package. Please install it manually.")
+    }
+  }
   library(glasso)
   tryCatch({
-    result <- glasso(s=as.matrix(data), rho=penalty_matrix, nobs=nobs)
-    return(list(precision_matrix=result$wi, edge_counts=result$wi != 0))
-  }, error=function(e) {
-    return(list(error_message=toString(e$message)))
+    result <- glasso(s = as.matrix(data), rho = penalty_matrix, nobs = nobs)
+    return(list(precision_matrix = result$wi, edge_counts = result$wi != 0))
+  }, error = function(e) {
+    return(list(error_message = toString(e$message)))
   })
 }
 ''')
