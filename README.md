@@ -51,7 +51,7 @@ R[write to console]:  library ‘/usr/lib/R/site-library’ contains no packages
 
 
 #### Inference Results in results/net_results:
-**omics_networks_info.txt** Gives info on the inferred omics network layers
+- **omics_networks_info.txt** Gives info on the inferred omics network layers
 
 ### network_diffusion.py
 - Performs knockout analysis 
