@@ -4,29 +4,29 @@ import rpy2.robjects as ro
 from rpy2.robjects import numpy2ri
 from rpy2.robjects.packages import importr
 from sklearn.covariance import empirical_covariance
+from src.glasso_installation import check_and_install_glasso
 
 
 
 # Activate the automatic conversion of numpy objects to R objects
 numpy2ri.activate()
 
+# Check and install glasso if needed before defining the R function
+if not check_and_install_glasso():
+    raise RuntimeError("Failed to ensure glasso package is available")
+
 # Define the R function for weighted graphical lasso
 ro.r('''
 weighted_glasso <- function(data, penalty_matrix, nobs) {
-  if (!requireNamespace("glasso", quietly = TRUE)) {
-    message("Package 'glasso' not found. Attempting to install...")
-    install.packages("glasso", repos = "https://cran.rstudio.com/")
-    if (!requireNamespace("glasso", quietly = TRUE)) {
-      stop("Failed to install 'glasso' package. Please install it manually.")
-    }
-  }
-  library(glasso)
-  tryCatch({
-    result <- glasso(s = as.matrix(data), rho = penalty_matrix, nobs = nobs)
-    return(list(precision_matrix = result$wi, edge_counts = result$wi != 0))
-  }, error = function(e) {
-    return(list(error_message = toString(e$message)))
-  })
+    # Suppress warnings and messages when loading the library
+    suppressWarnings(suppressMessages(library(glasso, quietly = TRUE)))
+    
+    tryCatch({
+        result <- glasso(s = as.matrix(data), rho = penalty_matrix, nobs = nobs)
+        return(list(precision_matrix = result$wi, edge_counts = result$wi != 0))
+    }, error = function(e) {
+        return(list(error_message = toString(e$message)))
+    })
 }
 ''')
 

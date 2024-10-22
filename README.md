@@ -39,16 +39,28 @@ Run the scripts in the following order, with default parameter settings, to infe
 - Infers omics networks from edge counts (RNA + protein)
 	- See "Running on HPC" below to run this step in under 10 minutes
 
+*Note: You might see the following warnings from R, but the program still runs fine:*
 
-*Results in results/net_results: Gives info on the inferred omics network layers*
+R[write to console]: In addition: 
+R[write to console]: Warning message:
+
+R[write to console]: In (function (package, help, pos = 2, lib.loc = NULL, character.only = FALSE,  :
+R[write to console]: 
+ 
+R[write to console]:  library ‘/usr/lib/R/site-library’ contains no packages
+
+
+#### Inference Results in results/net_results:
+**omics_networks_info.txt** Gives info on the inferred omics network layers
 
 ### network_diffusion.py
 - Performs knockout analysis 
 
-Results in results/diff_results: 
-- NODE_KNOCKOUTS_RESULTS_symmetricTrue_low_dens.csv is a spreadsheet containing results on the effect of knockouts on the network, as well as investigating potential increases in similarity between cms123 and cmsALL
-- Diffusion GIF for visualisation
-- Plots of GDD for critical genes
+#### Diffusion Results in results/diff_results: 
+- **NODE_KNOCKOUTS_RESULTS_symmetricTrue_low_dens.csv** is a spreadsheet containing results on the effect of knockouts on the network, as well as investigating potential increases in similarity between cms123 and cmsALL
+- **Top_vs_bottom_gene_GDD.png**: Plots of GDD for critical genes
+- **diffusion_animation.gif**: Diffusion GIF for visualisation
+
 
 ![](diffusion_animation.gif|100)
 <img src="diffusion_animation.gif" width="600" height="800" />
