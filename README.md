@@ -9,7 +9,7 @@ The tool has been tested on colorectal cancer datasets.
 ![Alt text](MONIKA_arrow.png)
 
 ## Installation
-To make installation easy, it is recommended to use a [conda](https://www.anaconda.com/download) environment (conda v24.9.1). 
+To make installation easy, it is recommended to use a [conda](https://www.anaconda.com/download) environment (miniconda or anaconda >= 24.9.1). 
 
 Once the repository is downloaded, edit the environment.yml file, change prefix to where you want to install the environment (at the bottom of the file, prefix: path/to/anaconda3/envs/monika)
 
@@ -22,9 +22,6 @@ conda activate monika
 pip install pymnet
 
 conda install -c conda-forge rpy2
-
-
-*If the last step doesn't work, try installing [R](https://www.r-project.org/) (Version >= 4.0) before running "conda install -c conda-forge rpy2"*
 
 ## Data
 The multi-omic CRC data used for testing is included in the repository. It is sourced from: https://www.linkedomics.org/data_download/TCGA-COADREAD/. It contains patient-coupled samples for both transcriptomics, proteomics and RPPA (Reverse-Phase Protein Array).
