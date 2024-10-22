@@ -38,7 +38,7 @@ if not"SLURM_JOB_ID" in os.environ:
     from mpl_toolkits.axes_grid1 import ImageGrid 
     plt.rcParams.update(plt.rcParamsDefault) 
     plt.rcParams.update({"font.size": 15,
-                        "figure.dpi" : 100,
+                        "figure.dpi" : 80,
                         "grid.alpha": 0.3,
                         "axes.grid": True,
                         "axes.axisbelow": True, 
@@ -886,6 +886,8 @@ if "SLURM_JOB_ID" not in os.environ and args.visualize == True:
         returns:
             fig: Matplotlib figure
         """
+        # Turn off interactive plotting
+        plt.ioff()
         # Load the pickle file
         with open('results/diff_results/LOCAL_Pathway_False_target__GDDs_ks308_permuNone_symmetricTrue_low_dens_5,26.pkl', 'rb') as f:
             results = pkl.load(f)
@@ -1006,7 +1008,10 @@ if "SLURM_JOB_ID" not in os.environ and args.visualize == True:
 
         # Display the figure
         plt.tight_layout()
+        # Turn interactive plotting back on before showing
+        plt.ion()
         plt.show()
+        pass  # Added pass command to ensure completion
 
     multiplex_diff_viz(pymnet_ALL, weighted_G_cms_ALL)
 
