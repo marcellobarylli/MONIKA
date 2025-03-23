@@ -1,4 +1,4 @@
-# %% 
+# %%
 import os
 import sys
 
@@ -26,68 +26,23 @@ from sklearn.preprocessing import PowerTransformer
 import statsmodels
 
 
-# %% Dataset processing
-# Load samples from CRC patients for both RNA (linked_rna.cct) and Protein (linked_rppa.tsv) data
-linked_RNA = pd.read_csv('data/LinkedOmics/linked_rna.cct', sep='\t', index_col=0)
-linked_rppa = pd.read_csv('data/LinkedOmics/linked_rppa.tsv', sep='\t', index_col=0)
-
-# transpose
-linked_RNA_T = linked_RNA.transpose()
-linked_rppa_T = linked_rppa.transpose()
-
-# Apply CMS labels obtained from the CMS classifier by Guinney et al. (2015)
-classifier_labels = pd.read_csv('data/LinkedOmics/TCGACRC_CMS_CLASSIFIER_LABELS.tsv', sep='\t')
-classifier_labels.rename(columns={classifier_labels.columns[0]: 'sample_ID'}, inplace=True)
-
-# remove all columns except for 'sampleID' and 'SSP.nearestCMS'
-classifier_labels = classifier_labels.loc[:, classifier_labels.columns.isin(['sample_ID', 'SSP.nearestCMS'])]
-
-# set index to 'sample_ID'
-classifier_labels.set_index('sample_ID', inplace=True)
-
-
-# Merge the labels with the transposed RNA data
-linked_RNA_T_labeled = linked_RNA_T.join(classifier_labels)
-# Merge the labels with the transposed RPPA data
-linked_rppa_T_labeled = linked_rppa_T.join(classifier_labels)
-
-
-# only keep columns (genes) that are in both dataframes
-linked_RNA_T_labeled = linked_RNA_T_labeled.loc[:, linked_RNA_T_labeled.columns.isin(linked_rppa_T_labeled.columns)]
-linked_rppa_T_labeled = linked_rppa_T_labeled.loc[:, linked_rppa_T_labeled.columns.isin(linked_RNA_T_labeled.columns)]
-
-# Due to data limitations, the proposed split is: CMS1 + CMS2 + CMS3 vs CMSALL (All subtypes)
-# make subset df with only CMS1, CMS2, CMS3 and then drop the last column
-linked_RNA_T_123 = linked_RNA_T_labeled.loc[linked_RNA_T_labeled.iloc[:, -1].isin(['CMS1', 'CMS2', 'CMS3'])].drop(columns=['SSP.nearestCMS'])
-linked_rppa_T_123 = linked_rppa_T_labeled.loc[linked_rppa_T_labeled.iloc[:, -1].isin(['CMS1', 'CMS2', 'CMS3'])].drop(columns=['SSP.nearestCMS'])
-linked_RNA_T_ALL = linked_RNA_T_labeled.loc[linked_RNA_T_labeled.iloc[:, -1].isin(['CMS1', 'CMS2', 'CMS3', 'CMS4'])].drop(columns=['SSP.nearestCMS'])
-linked_rppa_T_ALL = linked_rppa_T_labeled.loc[linked_rppa_T_labeled.iloc[:, -1].isin(['CMS1', 'CMS2', 'CMS3', 'CMS4'])].drop(columns=['SSP.nearestCMS'])
-
-# print shapes
-print(f'linked_RNA_T_ALL shape: {linked_RNA_T_ALL.shape}')
-print(f'linked_rppa_T_ALL shape: {linked_rppa_T_ALL.shape}')
-print(f'linked_RNA_T_123 shape: {linked_RNA_T_123.shape}')
-print(f'linked_rppa_T_123 shape: {linked_rppa_T_123.shape}')
-
-
-# %% CHECK TO SEE IF EXPRESSION FROM GUINNEY DATA MATCHES THE RPPA DATA
-
 def apply_yeo_johnson(column):
     """
     Applies a power transform to the data using the Yeo-Johnson method, to make it more Gaussian-like.
     """
-    transformer = PowerTransformer(method='yeo-johnson')
+    transformer = PowerTransformer(method="yeo-johnson")
     # Reshape data for transformation (needs to be 2D)
     column_reshaped = column.values.reshape(-1, 1)
     transformed_column = transformer.fit_transform(column_reshaped)
     # Flatten the array to 1D
     return transformed_column.flatten()
 
+
 def filter_dataframes(df1, df2):
     # check overlap between df1.columns and df2.columns
     overlap = set(df1.columns).intersection(set(df2.columns))
-    print('total number of variables in df2: {}'.format(len(df2.columns)))
-    print(f'variables both in df1 and df2: {len(overlap)}')
+    print("total number of variables in df2: {}".format(len(df2.columns)))
+    print(f"variables both in df1 and df2: {len(overlap)}")
 
     # keep only columns that are in overlap
     df1 = df1.loc[:, df1.columns.isin(overlap)]
@@ -95,28 +50,24 @@ def filter_dataframes(df1, df2):
 
     return df1, df2
 
+
 def center_and_scale(df, axis=0):
     # center and scale across columns
     df = df.apply(lambda x: (x - x.mean()) / x.std(), axis=0)
     return df
-
-# center and scale across columns
-PROT_df_ALL_SC = center_and_scale(linked_rppa_T_ALL)
-RNA_df_ALL_SC = center_and_scale(linked_RNA_T_ALL)
-PROT_df_123_SC = center_and_scale(linked_rppa_T_123)
-RNA_df_123_SC = center_and_scale(linked_RNA_T_123)
-
 
 
 def transform_and_test(data_to_trim, dataframe_name):
     """
     Winsorize outliers, apply Yeo-Johnson transformation, and perform Kolmogorov-Smirnoff test to check for normality.
     """
-    print('--------------------------------------------------------------')
-    print(f'Initial results for {dataframe_name}')
-    
+    print("--------------------------------------------------------------")
+    print(f"Initial results for {dataframe_name}")
+
     # Winsorize
-    data_to_trim = data_to_trim.apply(lambda x: winsorize(x, limits=[0.01, 0.01]), axis=0)
+    data_to_trim = data_to_trim.apply(
+        lambda x: winsorize(x, limits=[0.01, 0.01]), axis=0
+    )
 
     alpha = 0.05
     original_ks_results = {}
@@ -125,7 +76,7 @@ def transform_and_test(data_to_trim, dataframe_name):
     for column in data_to_trim.columns:
         data = data_to_trim[column].dropna()
         if data.nunique() > 1 and len(data) > 3:
-            stat, p = stats.kstest(data, 'norm', args=(data.mean(), data.std()))
+            stat, p = stats.kstest(data, "norm", args=(data.mean(), data.std()))
             original_ks_results[column] = (stat, p)
             if p < alpha:
                 # Apply Yeo-Johnson transformation
@@ -135,75 +86,198 @@ def transform_and_test(data_to_trim, dataframe_name):
     for column, (original_stat, original_p) in original_ks_results.items():
         if original_p < alpha:
             transformed_data = data_to_trim[column].dropna()
-            new_stat, new_p = stats.kstest(transformed_data, 'norm', args=(transformed_data.mean(), transformed_data.std()))
+            new_stat, new_p = stats.kstest(
+                transformed_data,
+                "norm",
+                args=(transformed_data.mean(), transformed_data.std()),
+            )
             if new_p < alpha:
-                # Visualize and investigate columns (genes) that still deviate from normality
-                print(f'Column: {column}')
-                print(f'  Original K-S Statistic: {original_stat}, p-value: {original_p}')
-                print(f'  Transformed K-S Statistic: {new_stat}, p-value: {new_p}')
-                print('--------------------------------------------------------------\n')
+                print(f"Column: {column}")
+                print(
+                    f"  Original K-S Statistic: {original_stat}, p-value: {original_p}"
+                )
+                print(f"  Transformed K-S Statistic: {new_stat}, p-value: {new_p}")
+                print(
+                    "--------------------------------------------------------------\n"
+                )
 
                 # make QQ-plot for these columns
                 (fig, ax) = plt.subplots()
                 stats.probplot(transformed_data, dist="norm", plot=ax)
-                ax.set_title(f'QQ-plot for {column} (W: {round(new_stat, 3)}, p: {new_p}')
+                ax.set_title(
+                    f"QQ-plot for {column} (W: {round(new_stat, 3)}, p: {new_p}"
+                )
                 # plt.show()
-    
+
     return data_to_trim
 
-# Apply transformations and tests to each dataframe
-prot_df_all_transformed = transform_and_test(PROT_df_ALL_SC, 'PROT_df_ALL')
-rna_df_all_transformed = transform_and_test(RNA_df_ALL_SC, 'RNA_df_ALL')
-prot_df_123_transformed = transform_and_test(PROT_df_123_SC, 'PROT_df_123')
-rna_df_123_transformed = transform_and_test(RNA_df_123_SC, 'RNA_df_123_SC')
 
-print(prot_df_123_transformed.shape)
-
-# whitelist genes that are relevant for CMS-based analysis
-whitelist = ['VEGFR2', 'CDH1', 'BRAF', 'BAP1', 'TP53', 'CASP7', 'PRKCD', 'RAB11A', 'YAP1', 'CTNNB1', 'CCNB1', 'CCNE1', 
-             'CCNE2', 'HSPA1A', 'ARID1A', 'ASNS', 'CHEK2', 'PCNA', 'ITGA2', 'MAPK1', 'ANXA1', 'CLDN7', 'COL6A1', 'FN1', 
-             'MYH11','TP53BP1', 'EIF4EBP1', 'EEF2K', 'EIF4G1', 'FRAP1', 'RICTOR', 'RPS6', 'TSC1', 'RPS6KA1', 'ACACA',
-             'AR', 'KIT', 'EGFR', 'FASN', 'ERBB3', 'IGFBP2', 'CDKN1A', 'CDKN1B', 'SQSTM1', 'PEA15', 'RB1', 'ACVRL1'
-             'SMAD1', 'FOXM1', 'FOXO3', 'CAV1', 'PARK7', 'SERPINE1', 'RBM15', 'WWTR1', 'TGM2']
-# blacklist genes that remain non-normal after transformation
-blacklist = ['ERBB2', 'NKX2-1', 'RAD50']
-
-# %%
-
-# remove columns in blacklist
-prot_df_all_transformed = prot_df_all_transformed.loc[:, ~prot_df_all_transformed.columns.isin(blacklist)]
-rna_df_all_transformed = rna_df_all_transformed.loc[:, ~rna_df_all_transformed.columns.isin(blacklist)]
-prot_df_123_transformed = prot_df_123_transformed.loc[:, ~prot_df_123_transformed.columns.isin(blacklist)]
-rna_df_123_transformed = rna_df_123_transformed.loc[:, ~rna_df_123_transformed.columns.isin(blacklist)]
-
-# check shape of all dataframes
-print(f'\nexpr_df shape: {rna_df_all_transformed.shape}')
-print(f'rppa_df shape: {prot_df_all_transformed.shape}')
-print(f'expr_df_2_13 shape: {rna_df_123_transformed.shape}')
-print(f'rppa_df_2_13 shape: {prot_df_123_transformed.shape}')
-
-# Check for NaNs 
-print(f'expr_df NaNs: {rna_df_all_transformed.isna().sum().sum()}')
-print(f'rppa_df NaNs: {prot_df_all_transformed.isna().sum().sum()}')
-# Check for Inf
-print(f'expr_df Inf: {np.isinf(rna_df_all_transformed).sum().sum()}')
-print(f'rppa_df Inf: {np.isinf(prot_df_all_transformed).sum().sum()}')
-
-# replace NaNs with column mean
-rna_df_all_transformed = rna_df_all_transformed.fillna(rna_df_all_transformed.mean())
-prot_df_all_transformed = prot_df_all_transformed.fillna(prot_df_all_transformed.mean())
-rna_df_123_transformed = rna_df_123_transformed.fillna(rna_df_123_transformed.mean())
-prot_df_123_transformed = prot_df_123_transformed.fillna(prot_df_123_transformed.mean())
+# Common blacklist genes that remain non-normal after transformation
+blacklist = [
+    "ERBB2",
+    # "NKX2-1",
+    # "RAD50",
+    "ANXA1",
+    "CASP8",
+    "DIRAS3",
+    "CAV1",
+    "GATA3",
+    "GATA6",
+    "EIF4G1",
+    "GATA6",
+    "IGFBP2",
+    "MS4A1",
+    "RAB25",
+    "BAK1",
+    "BID",
+    "BCL2L11",
+    "ITGA2",
+    "FASN",
+    "G6PD",
+    "IRS1",
+    "XRCC5",
+    "MYH11",
+    "MRE11A",
+    "RBM15",
+    "TSC1",
+    "KIT",
+    "EEF2",
+    "SQSTM1",
+    "ERCC1",
+]
 
 
-# write to csv
-prot_df_all_transformed.to_csv('data/proteomics_for_pig_cmsALL.csv')
-rna_df_all_transformed.to_csv('data/transcriptomics_for_pig_cmsALL.csv')
+def load_and_preprocess_data(rna_path, protein_path, cms_labels_path=None):
+    """
+    Load and preprocess omics data with optional CMS labeling
 
-prot_df_123_transformed.to_csv('data/proteomics_for_pig_cms123.csv')
-rna_df_123_transformed.to_csv('data/transcriptomics_for_pig_cms123.csv')
+    Parameters:
+    -----------
+    rna_path : str
+        Path to RNA data file
+    protein_path : str
+        Path to protein data file
+    cms_labels_path : str, optional
+        Path to CMS labels file. If None, no CMS labeling is performed
 
-# write column names to .txt file
-with open('data/VAR_NAMES_GENELIST.txt', 'w') as f:
-    for item in prot_df_all_transformed.columns:
-        f.write("%s\n" % item)
+    Returns:
+    --------
+    tuple: Processed RNA and protein dataframes
+    """
+    # Load data
+    rna_data = pd.read_csv(rna_path, sep="\t", index_col=0)
+    protein_data = pd.read_csv(protein_path, sep="\t", index_col=0)
+
+    # Transpose
+    rna_data = rna_data.transpose()
+    protein_data = protein_data.transpose()
+
+    # Filter to keep only overlapping genes
+    rna_data, protein_data = filter_dataframes(rna_data, protein_data)
+
+    if cms_labels_path:
+        # Apply CMS labels if provided
+        classifier_labels = pd.read_csv(cms_labels_path, sep="\t")
+        classifier_labels.rename(
+            columns={classifier_labels.columns[0]: "sample_ID"}, inplace=True
+        )
+        classifier_labels = classifier_labels.loc[:, ["sample_ID", "SSP.nearestCMS"]]
+        classifier_labels.set_index("sample_ID", inplace=True)
+
+        rna_data = rna_data.join(classifier_labels)
+        protein_data = protein_data.join(classifier_labels)
+
+        # Create CMS subsets if labels exist
+        rna_cms123 = rna_data.loc[
+            rna_data.iloc[:, -1].isin(["CMS1", "CMS2", "CMS3"])
+        ].drop(columns=["SSP.nearestCMS"])
+        protein_cms123 = protein_data.loc[
+            protein_data.iloc[:, -1].isin(["CMS1", "CMS2", "CMS3"])
+        ].drop(columns=["SSP.nearestCMS"])
+
+        return (
+            rna_data.drop(columns=["SSP.nearestCMS"]),
+            protein_data.drop(columns=["SSP.nearestCMS"]),
+            rna_cms123,
+            protein_cms123,
+        )
+
+    return rna_data, protein_data, None, None
+
+
+def process_omics_data(rna_data, protein_data, output_prefix, blacklist=None):
+    """
+    Process omics data through normalization, transformation, and outlier handling
+
+    Parameters:
+    -----------
+    rna_data : pd.DataFrame
+        RNA expression data
+    protein_data : pd.DataFrame
+        Protein expression data
+    output_prefix : str
+        Prefix for output files
+    blacklist : list, optional
+        List of genes to exclude
+    """
+    # Center and scale
+    rna_scaled = center_and_scale(rna_data)
+    protein_scaled = center_and_scale(protein_data)
+
+    # Transform and test for normality
+    rna_transformed = transform_and_test(rna_scaled, "RNA_data")
+    protein_transformed = transform_and_test(protein_scaled, "Protein_data")
+
+    # Remove blacklisted genes if provided
+    if blacklist:
+        rna_transformed = rna_transformed.loc[
+            :, ~rna_transformed.columns.isin(blacklist)
+        ]
+        protein_transformed = protein_transformed.loc[
+            :, ~protein_transformed.columns.isin(blacklist)
+        ]
+
+    # Handle NaN values
+    rna_transformed = rna_transformed.fillna(rna_transformed.mean())
+    protein_transformed = protein_transformed.fillna(protein_transformed.mean())
+
+    # Save processed data
+    rna_transformed.to_csv(f"data/{output_prefix}_rna_processed.csv")
+    protein_transformed.to_csv(f"data/{output_prefix}_protein_processed.csv")
+
+    # Save gene list
+    with open(f"data/{output_prefix}_gene_list.txt", "w") as f:
+        for item in protein_transformed.columns:
+            f.write(f"{item}\n")
+
+    return rna_transformed, protein_transformed
+
+
+def main():
+    """
+    Main function to process both CRC and glioma datasets
+    """
+    # # Example usage for CRC data
+    # rna_crc, protein_crc, rna_cms123, protein_cms123 = load_and_preprocess_data(
+    #     "data/LinkedOmics/linked_rna.cct",
+    #     "data/LinkedOmics/linked_rppa.tsv",
+    #     "data/LinkedOmics/TCGACRC_CMS_CLASSIFIER_LABELS.tsv",
+    # )
+
+    # # Process CRC data
+    # blacklist = ["ERBB2", "NKX2-1", "RAD50"]
+    # process_omics_data(rna_crc, protein_crc, "crc_cmsALL", blacklist)
+    # if rna_cms123 is not None:
+    #     process_omics_data(rna_cms123, protein_cms123, "crc_cms123", blacklist)
+
+    # Example usage for glioma data
+    rna_glioma, protein_glioma, _, _ = load_and_preprocess_data(
+        "data/LinkedOmics/glioma_rna.cct", "data/LinkedOmics/glioma_rppa.cct"
+    )
+
+    # Process glioma data
+    process_omics_data(rna_glioma, protein_glioma, "glioma")
+
+
+if __name__ == "__main__":
+    main()
