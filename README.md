@@ -2,7 +2,7 @@
 ## Multi-Omic Network Inference &amp; Knockout Analysis
 
 Performs multiplex network inference in a biological setting. Each network layer is inferred using a weighted graphical LASSO with prior incorporation from the [STRING Database](https://string-db.org/).
-Target nodes and biological pathways are identified via significance testing of knockouts and diffusion analysis.
+Target nodes and biological pathways are identified via significance testing of knockouts and network diffusion analysis.
 
 The tool has been tested on colorectal cancer datasets.
 
@@ -27,6 +27,9 @@ conda install -c conda-forge rpy2
 The multi-omic CRC data used for testing is included in the repository. It is sourced from: https://www.linkedomics.org/data_download/TCGA-COADREAD/. It contains patient-coupled samples for both transcriptomics, proteomics and RPPA (Reverse-Phase Protein Array).
 
 ## Full Pipeline Run
+![](diffusion_animation.gif|100)
+<img src="diffusion_animation.gif" width="600" height="800" />
+
 Run the scripts in the following order, with default parameter settings, to infer networks and determine critical genes via diffusion analysis.
 
 ### omics_data_processing.py
@@ -60,10 +63,6 @@ R[write to console]:  library ‘/usr/lib/R/site-library’ contains no packages
 - **NODE_KNOCKOUTS_RESULTS_symmetricTrue_low_dens.csv** is a spreadsheet containing results on the effect of knockouts on the network, as well as investigating potential increases in similarity between cms123 and cmsALL
 - **Top_vs_bottom_gene_GDD.png**: Plots of GDD for critical genes
 - **diffusion_animation.gif**: Diffusion GIF for visualisation
-
-
-![](diffusion_animation.gif|100)
-<img src="diffusion_animation.gif" width="600" height="800" />
 
 
 ## Running on HPC
