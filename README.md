@@ -2,7 +2,7 @@
 ## Multi-Omic Network Inference &amp; Knockout Analysis
 
 Performs multiplex network inference in a biological setting. Each network layer is inferred using a weighted graphical LASSO with prior incorporation from the [STRING Database](https://string-db.org/).
-Target nodes and biological pathways are identified via significance testing of knockouts and network diffusion analysis.
+Target nodes and biological pathways are identified via network diffusion analysis.
 
 The tool has been tested on colorectal cancer datasets.
 
